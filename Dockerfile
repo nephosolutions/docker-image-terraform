@@ -18,7 +18,7 @@ MAINTAINER "Sebastian Trebitz <sebastian@strebitz.com>"
 ENV TERRAFORM_VERSION=0.9.11
 ENV TERRAFORM_SHA256SUM=804d31cfa5fee5c2b1bff7816b64f0e26b1d766ac347c67091adccc2626e16f3
 
-RUN apk add --no-cache --update bash curl git make openssh
+RUN apk add --no-cache --update curl git make
 RUN curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 RUN echo "${TERRAFORM_SHA256SUM}  terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > terraform_${TERRAFORM_VERSION}_SHA256SUMS
 RUN sha256sum -cs terraform_${TERRAFORM_VERSION}_SHA256SUMS
