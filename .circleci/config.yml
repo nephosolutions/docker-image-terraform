@@ -15,10 +15,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASS
-          docker tag strebitz/terraform strebitz/terraform:$(git describe)
-          docker push strebitz/terraform strebitz/terraform:$(git describe)
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker tag strebitz/terraform strebitz/terraform:$(git describe)
+      - run: docker push strebitz/terraform strebitz/terraform:$(git describe)
 
 workflows:
   version: 2
