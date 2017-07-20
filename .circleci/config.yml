@@ -21,6 +21,7 @@ jobs:
   deploy:
     <<: *container_config
     steps:
+      - checkout
       - attach_workspace:
           at: workspace
       - setup_remote_docker
