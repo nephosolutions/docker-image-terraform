@@ -9,9 +9,11 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: mkdir -p workspace
-      - run: docker build -t strebitz/terraform .
-      - run: docker save strebitz/terraform | gzip -c > workspace/docker-image_strebitz-terraform.tar.gz
+      - run:
+          command: |
+            mkdir -p workspace
+            docker build -t strebitz/terraform .
+            docker save strebitz/terraform | gzip -c > workspace/docker-image_strebitz-terraform.tar.gz
       - persist_to_workspace:
           root: workspace
           paths:
@@ -25,10 +27,12 @@ jobs:
       - attach_workspace:
           at: workspace
       - setup_remote_docker
-      - run: gzip -c -d workspace/docker-image_strebitz-terraform.tar.gz | docker load
-      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker tag strebitz/terraform strebitz/terraform:$(git describe)
-      - run: docker push strebitz/terraform strebitz/terraform:$(git describe)
+      - run:
+          command: |
+            gzip -c -d workspace/docker-image_strebitz-terraform.tar.gz | docker load
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker tag strebitz/terraform strebitz/terraform:$(git describe)
+            for image_tag in strebitz/terraform strebitz/terraform:$(git describe); do docker push ${image_tag}; done
 
 workflows:
   version: 2
