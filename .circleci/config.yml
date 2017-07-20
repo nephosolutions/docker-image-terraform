@@ -24,7 +24,7 @@ jobs:
       - attach_workspace:
           at: workspace
       - setup_remote_docker
-      - run: gzip -c -d workspace/strebitz-terraform.tar.gz | docker load
+      - run: gzip -c -d workspace/docker-image_strebitz-terraform.tar.gz | docker load
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run: docker tag strebitz/terraform strebitz/terraform:$(git describe)
       - run: docker push strebitz/terraform strebitz/terraform:$(git describe)
