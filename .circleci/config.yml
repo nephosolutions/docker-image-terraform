@@ -1,6 +1,6 @@
 container_config: &container_config
   docker:
-    - image: docker:17.06.0-ce
+    - image: docker:17.06.0-ce-git
 
 version: 2
 jobs:
@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: docker build -t strebitz/terraform:latest .
+      - run: docker build -t strebitz/terraform .
   deploy:
     <<: *container_config
     steps:
@@ -17,8 +17,8 @@ jobs:
       - setup_remote_docker
       - run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASS
-          docker tag strebitz/terraform:latest strebitz/terraform:$CIRCLE_TAG
-          docker push strebitz/terraform:latest strebitz/terraform:$CIRCLE_TAG
+          docker tag strebitz/terraform strebitz/terraform:$(git describe)
+          docker push strebitz/terraform strebitz/terraform:$(git describe)
 
 workflows:
   version: 2
