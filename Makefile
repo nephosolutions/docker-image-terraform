@@ -14,14 +14,18 @@
 
 .PHONY: build clean
 
-build:
-	docker build -t strebitz/terraform .
+DOCKER_IMAGE_NAME := strebitz/terraform
 
-workspace/docker-image_strebitz-terraform.tar.gz: build workspace
-	docker save strebitz/terraform | gzip -c > workspace/docker-image_strebitz-terraform.tar.gz
+remove = $(if $(wildcard $1),rm -rf $1)
+
+build:
+	docker build -t $(DOCKER_IMAGE_NAME) .
+
+workspace/docker-image.tar.gz: build workspace
+	docker save $(DOCKER_IMAGE_NAME) | gzip -c > workspace/docker-image.tar.gz
 
 clean:
-	$(if $(wildcard workspace),rm -rf workspace)
+	$(call remove,workspace)
 
 workspace:
 	mkdir -p workspace
