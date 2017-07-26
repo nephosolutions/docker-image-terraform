@@ -1,6 +1,8 @@
 container_config: &container_config
   docker:
     - image: strebitz/docker-ci:17.06-2-g7106469
+  environment:
+    - DOCKER_IMAGE_NAME: strebitz/terraform
 
 version: 2
 jobs:
@@ -25,10 +27,10 @@ jobs:
       - setup_remote_docker
       - run: gzip -c -d workspace/docker-image.tar.gz | docker load
       - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
-      - run: docker tag strebitz/terraform strebitz/terraform:$(git describe)
+      - run: docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}:$(git describe)
       - run:
           command: |
-            for image_tag in strebitz/terraform strebitz/terraform:$(git describe)
+            for image_tag in ${DOCKER_IMAGE_NAME}:$(git describe) ${DOCKER_IMAGE_NAME}
             do
               docker push ${image_tag}
             done
