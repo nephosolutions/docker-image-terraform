@@ -19,7 +19,9 @@ ENV TERRAFORM_VERSION=0.9.11
 
 COPY releases_public_key .
 
-RUN apk add --no-cache --update curl git gnupg make openssh
+RUN apk add --no-cache --update curl git gnupg jq make openssh python py-pip
+
+RUN pip install awscli
 
 RUN curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 RUN curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig > terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig
