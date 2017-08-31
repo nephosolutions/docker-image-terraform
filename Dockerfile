@@ -15,7 +15,7 @@
 FROM alpine:3.6
 MAINTAINER "Sebastian Trebitz <sebastian@strebitz.com>"
 
-ENV TERRAFORM_VERSION=0.9.11
+ENV TERRAFORM_VERSION=0.10.3
 
 COPY releases_public_key .
 
