@@ -31,7 +31,7 @@ RUN gpg --verify terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig terraform_${TERRA
 RUN grep linux_amd64 terraform_${TERRAFORM_VERSION}_SHA256SUMS >terraform_${TERRAFORM_VERSION}_SHA256SUMS_linux_amd64
 RUN sha256sum -cs terraform_${TERRAFORM_VERSION}_SHA256SUMS_linux_amd64
 
-RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /bin
+RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin
 
 
 FROM alpine:${ALPINE_VERSION}
@@ -46,5 +46,5 @@ RUN addgroup circleci && \
 USER circleci
 WORKDIR /home/circleci
 
-COPY --from=downloader /bin/terraform /bin/terraform
+COPY --from=downloader /usr/local/bin/terraform /usr/local/bin/terraform
 COPY --chown=circleci:circleci .terraform.d /home/circleci/.terraform.d
