@@ -44,3 +44,18 @@ jobs:
 
               docker push "${DOCKER_IMAGE_OWNER}/${DOCKER_IMAGE_NAME}"
             fi
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
+  weekly:
+    triggers:
+      - schedule:
+          cron: "0 1 * * 6"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build
