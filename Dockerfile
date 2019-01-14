@@ -14,6 +14,7 @@
 
 ARG ALPINE_VERSION
 ARG ANSIBLE_VERSION
+ARG RUBY_VERSION
 
 FROM alpine:${ALPINE_VERSION} as downloader
 
@@ -52,15 +53,19 @@ RUN unzip /tmp/terraform-provider-acme_v${TERRAFORM_PROVIDER_ACME_VERSION}_linux
     mv terraform-provider-acme terraform-provider-acme_v${TERRAFORM_PROVIDER_ACME_VERSION}
 
 
-FROM alpine:${ALPINE_VERSION}
+FROM ruby:${RUBY_VERSION}-alpine${ALPINE_VERSION}
 LABEL maintainer="sebastian@nephosolutions.com"
 
 RUN apk add --no-cache --update \
   bash \
+  build-base \
   ca-certificates \
   git \
+  groff \
+  libc6-compat \
   make \
-  openssh-client
+  openssh-client \
+  openssl
 
 RUN ln -s /lib /lib64
 
