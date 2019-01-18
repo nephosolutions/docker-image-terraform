@@ -26,9 +26,7 @@ CACHE_DIR 		:= .cache
 
 remove = $(if $(strip $1),rm -rf $(strip $1))
 
-$(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME):
-	$(if $(wildcard $(CACHE_DIR)/$(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME).tar),docker load --input $(CACHE_DIR)/$(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME).tar)
-
+$(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME): restore
 	docker build \
 	--build-arg ALPINE_VERSION=$(ALPINE_VERSION) \
 	--build-arg GIT_CRYPT_VERSION=$(GIT_CRYPT_VERSION) \
@@ -45,4 +43,7 @@ $(CACHE_DIR)/$(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME).tar: $(DOCKER_IMAGE_OWNE
 clean:
 	$(call remove,$(wildcard $(CACHE_DIR)))
 
-.PHONY: clean $(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME)
+restore:
+	$(if $(wildcard $(CACHE_DIR)/$(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME).tar),docker load --input $(CACHE_DIR)/$(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME).tar)
+
+.PHONY: clean restore $(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME)

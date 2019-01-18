@@ -11,15 +11,17 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+config: &config
+  docker:
+    - image: nephosolutions/docker
+  environment:
+    - DOCKER_IMAGE_OWNER: nephosolutions
+    - DOCKER_IMAGE_NAME: terraform
 
 version: 2
 jobs:
   build:
-    docker:
-      - image: nephosolutions/docker
-    environment:
-      - DOCKER_IMAGE_OWNER: nephosolutions
-      - DOCKER_IMAGE_NAME: terraform
+    <<: *config
     steps:
       - checkout
       - setup_remote_docker
@@ -33,15 +35,31 @@ jobs:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
             - .cache
+  deploy:
+    <<: *config
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          key: v1-{{ .Branch }}
       - deploy:
           name: Tag and push Docker image
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+            docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
 
+            make restore
+
+            if [ ! -z "${CIRCLE_BRANCH}" ]; then
               docker tag "${DOCKER_IMAGE_OWNER}/${DOCKER_IMAGE_NAME}" "${DOCKER_IMAGE_OWNER}/${DOCKER_IMAGE_NAME}:${CIRCLE_BRANCH}-${CIRCLE_SHA1}"
               docker push "${DOCKER_IMAGE_OWNER}/${DOCKER_IMAGE_NAME}:${CIRCLE_BRANCH}-${CIRCLE_SHA1}"
+            fi
 
+            if [ ! -z "${CIRCLE_TAG}" ]; then
+              docker tag "${DOCKER_IMAGE_OWNER}/${DOCKER_IMAGE_NAME}" "${DOCKER_IMAGE_OWNER}/${DOCKER_IMAGE_NAME}:${CIRCLE_TAG}"
+              docker push "${DOCKER_IMAGE_OWNER}/${DOCKER_IMAGE_NAME}:${CIRCLE_TAG}"
+            fi
+
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker push "${DOCKER_IMAGE_OWNER}/${DOCKER_IMAGE_NAME}"
             fi
 workflows:
@@ -49,6 +67,28 @@ workflows:
   commit:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+  release:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
   weekly:
     triggers:
       - schedule:
@@ -59,3 +99,6 @@ workflows:
                 - master
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
