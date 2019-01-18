@@ -18,6 +18,17 @@ config: &config
     - DOCKER_IMAGE_OWNER: nephosolutions
     - DOCKER_IMAGE_NAME: terraform
 
+commit_filters: &commit_filters
+  branches:
+    only:
+      - master
+
+release_filters: &release_filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /[0-9]+(\.[0-9]+)*/
+
 version: 2
 jobs:
   build:
@@ -70,33 +81,20 @@ workflows:
       - deploy:
           requires:
             - build
-          filters:
-            branches:
-              only: master
+          filters: *commit_filters
   release:
     jobs:
       - build:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /[0-9]+(\.[0-9]+)*/
+          filters: *release_filters
       - deploy:
           requires:
             - build
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /[0-9]+(\.[0-9]+)*/
+          filters: *release_filters
   weekly:
     triggers:
       - schedule:
           cron: "0 1 * * 6"
-          filters:
-            branches:
-              only:
-                - master
+          filters: *commit_filters
     jobs:
       - build
       - deploy:
