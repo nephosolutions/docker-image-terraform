@@ -80,7 +80,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /v[0-9]+(\.[0-9]+)*/
+              only: /[0-9]+(\.[0-9]+)*/
       - deploy:
           requires:
             - build
@@ -88,7 +88,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /v[0-9]+(\.[0-9]+)*/
+              only: /[0-9]+(\.[0-9]+)*/
   weekly:
     triggers:
       - schedule:
