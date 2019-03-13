@@ -1,4 +1,4 @@
-#   Copyright 2018 NephoSolutions SPRL, Sebastian Trebitz
+#   Copyright 2019 NephoSolutions SPRL, Sebastian Trebitz
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -11,6 +11,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+
 config: &config
   docker:
     - image: nephosolutions/docker
@@ -93,7 +94,7 @@ workflows:
   weekly:
     triggers:
       - schedule:
-          cron: "0 1 * * 6"
+          cron: "0 3 * * 6"
           filters: *commit_filters
     jobs:
       - build

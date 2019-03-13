@@ -1,4 +1,4 @@
-#   Copyright 2018 NephoSolutions SPRL, Sebastian Trebitz
+#   Copyright 2019 NephoSolutions SPRL, Sebastian Trebitz
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ DOCKER_IMAGE_NAME		:= terraform
 ALPINE_VERSION		:= 3.8
 GIT_CRYPT_VERSION	:= 0.6.0-r0
 RUBY_VERSION			:= 2.5.3
-TERRAFORM_VERSION	:= 0.11.11
+TERRAFORM_VERSION	:= 0.11.13
 
 TERRAFORM_PROVIDER_ACME_VERSION	:= 0.6.0
 
