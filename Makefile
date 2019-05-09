@@ -13,16 +13,16 @@
 #   limitations under the License.
 
 DOCKER_IMAGE_OWNER	:= nephosolutions
-DOCKER_IMAGE_NAME		:= terraform
+DOCKER_IMAGE_NAME	:= terraform
 
 ALPINE_VERSION		:= 3.9
 GIT_CRYPT_VERSION	:= 0.6.0-r1
-RUBY_VERSION			:= 2.6.3
+RUBY_VERSION		:= 2.6.3
 TERRAFORM_VERSION	:= 0.11.13
 
 TERRAFORM_PROVIDER_ACME_VERSION	:= 0.6.0
 
-CACHE_DIR 		:= .cache
+CACHE_DIR	:= .cache
 
 remove = $(if $(strip $1),rm -rf $(strip $1))
 
