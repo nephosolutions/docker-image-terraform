@@ -77,4 +77,11 @@ ADD https://github.com/sgerrand/alpine-pkg-git-crypt/releases/download/${GIT_CRY
 RUN apk add /var/cache/apk/git-crypt-${GIT_CRYPT_VERSION}.apk
 
 COPY --from=downloader /usr/local/bin/terraform /usr/local/bin/terraform
-COPY --from=downloader /tmp/terraform.d .terraform.d
+
+RUN addgroup alpine && \
+    adduser -G alpine -D alpine
+
+USER alpine
+ENV USER alpine
+
+COPY --from=downloader --chown=alpine:alpine /tmp/terraform.d .terraform.d
