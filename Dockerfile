@@ -23,6 +23,12 @@ RUN apk add --no-cache --update \
 
 WORKDIR /tmp
 
+ARG GCLOUD_SDK_VERSION
+ENV GCLOUD_SDK_VERSION ${GCLOUD_SDK_VERSION}
+
+ADD https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_SDK_VERSION}-linux-x86_64.tar.gz google-cloud-sdk-${GCLOUD_SDK_VERSION}-linux-x86_64.tar.gz
+RUN tar -xzf google-cloud-sdk-${GCLOUD_SDK_VERSION}-linux-x86_64.tar.gz
+
 COPY hashicorp-releases-public-key.asc .
 RUN gpg --import hashicorp-releases-public-key.asc
 
@@ -65,7 +71,8 @@ RUN apk add --no-cache --update \
   libc6-compat \
   make \
   openssh-client \
-  openssl
+  openssl \
+  python
 
 RUN ln -s /lib /lib64
 
@@ -76,6 +83,7 @@ ADD https://raw.githubusercontent.com/sgerrand/alpine-pkg-git-crypt/master/sgerr
 ADD https://github.com/sgerrand/alpine-pkg-git-crypt/releases/download/${GIT_CRYPT_VERSION}/git-crypt-${GIT_CRYPT_VERSION}.apk /var/cache/apk/
 RUN apk add /var/cache/apk/git-crypt-${GIT_CRYPT_VERSION}.apk
 
+COPY --from=downloader /tmp/google-cloud-sdk /opt/google/cloud-sdk
 COPY --from=downloader /usr/local/bin/terraform /usr/local/bin/terraform
 
 RUN addgroup alpine && \
@@ -83,5 +91,7 @@ RUN addgroup alpine && \
 
 USER alpine
 ENV USER alpine
+
+ENV PATH $PATH:/opt/google/cloud-sdk/bin
 
 COPY --from=downloader --chown=alpine:alpine /tmp/terraform.d .terraform.d

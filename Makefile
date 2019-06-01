@@ -16,6 +16,7 @@ DOCKER_IMAGE_OWNER	:= nephosolutions
 DOCKER_IMAGE_NAME	:= terraform
 
 ALPINE_VERSION		:= 3.9
+GCLOUD_SDK_VERSION	:= 248.0.0
 GIT_CRYPT_VERSION	:= 0.6.0-r1
 RUBY_VERSION		:= 2.6.3
 TERRAFORM_VERSION	:= 0.11.13
@@ -29,6 +30,7 @@ remove = $(if $(strip $1),rm -rf $(strip $1))
 $(DOCKER_IMAGE_OWNER)/$(DOCKER_IMAGE_NAME): restore
 	docker build \
 	--build-arg ALPINE_VERSION=$(ALPINE_VERSION) \
+	--build-arg GCLOUD_SDK_VERSION=$(GCLOUD_SDK_VERSION) \
 	--build-arg GIT_CRYPT_VERSION=$(GIT_CRYPT_VERSION) \
 	--build-arg RUBY_VERSION=$(RUBY_VERSION) \
 	--build-arg TERRAFORM_VERSION=$(TERRAFORM_VERSION) \
