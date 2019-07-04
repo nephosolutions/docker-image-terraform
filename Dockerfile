@@ -44,19 +44,9 @@ RUN gpg --verify terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig terraform_${TERRA
 RUN grep linux_amd64 terraform_${TERRAFORM_VERSION}_SHA256SUMS >terraform_${TERRAFORM_VERSION}_SHA256SUMS_linux_amd64
 RUN sha256sum -cs terraform_${TERRAFORM_VERSION}_SHA256SUMS_linux_amd64
 
-ARG TERRAFORM_PROVIDER_ACME_VERSION
-ENV TERRAFORM_PROVIDER_ACME_VERSION ${TERRAFORM_PROVIDER_ACME_VERSION}
-
-ADD https://github.com/vancluever/terraform-provider-acme/releases/download/v${TERRAFORM_PROVIDER_ACME_VERSION}/terraform-provider-acme_v${TERRAFORM_PROVIDER_ACME_VERSION}_linux_amd64.zip terraform-provider-acme_v${TERRAFORM_PROVIDER_ACME_VERSION}_linux_amd64.zip
-
 WORKDIR /usr/local/bin
 
 RUN unzip /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-
-WORKDIR /tmp/terraform.d/plugins
-
-RUN unzip /tmp/terraform-provider-acme_v${TERRAFORM_PROVIDER_ACME_VERSION}_linux_amd64.zip && \
-    mv terraform-provider-acme terraform-provider-acme_v${TERRAFORM_PROVIDER_ACME_VERSION}
 
 
 FROM ruby:${RUBY_VERSION}-alpine${ALPINE_VERSION}
@@ -93,5 +83,3 @@ USER alpine
 ENV USER alpine
 
 ENV PATH $PATH:/opt/google/cloud-sdk/bin
-
-COPY --from=downloader --chown=alpine:alpine /tmp/terraform.d .terraform.d
