@@ -59,6 +59,7 @@ RUN apk add --no-cache --update \
   git \
   groff \
   libc6-compat \
+  libsodium \
   make \
   openssh-client \
   openssl \
