@@ -51,6 +51,8 @@ RUN unzip /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 FROM ruby:${RUBY_VERSION}-alpine${ALPINE_VERSION}
 LABEL maintainer="sebastian@nephosolutions.com"
+LABEL name="nephosolutions/terraform"
+LABEL version="${TERRAFORM_VERSION}"
 
 RUN apk add --no-cache --update \
   bash \
