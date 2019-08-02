@@ -16,6 +16,9 @@ repos:
     hooks:
       - id: insert-license
         files: ^(Docker|Make)file$
+        args:
+          - --license-filepath
+          - .license_header.txt
   - repo: https://github.com/syntaqx/git-hooks
     rev: v0.0.16
     hooks:
