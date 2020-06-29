@@ -13,7 +13,6 @@
 #   limitations under the License.
 
 ARG ALPINE_VERSION
-ARG ANSIBLE_VERSION
 ARG RUBY_VERSION
 
 FROM alpine:${ALPINE_VERSION} as downloader
@@ -65,7 +64,7 @@ RUN apk add --no-cache --update \
   make \
   openssh-client \
   openssl \
-  python
+  python3
 
 RUN ln -s /lib /lib64
 
